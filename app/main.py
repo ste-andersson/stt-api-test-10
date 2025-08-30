@@ -58,7 +58,7 @@ async def ws_transcribe(ws: WebSocket):
 async def _handle_ws(client_ws: WebSocket):
     await client_ws.accept()
     # Frontend expects this on handshake (based on previous project tooling)
-    await client_ws.send_text("ready")
+    await client_ws.send_text(json.dumps({"type": "ready"}))
 
     # If we can, set up an upstream OpenAI Realtime WS, and proxy between them.
     # If not, we'll buffer input locally and use the HTTP transcription endpoint on demand.
