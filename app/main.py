@@ -18,7 +18,7 @@ except Exception:
 
 # ---- Settings (match 7-backend defaults where practical) ----
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-REALTIME_URL = os.getenv("REALTIME_URL", os.getenv("REALTIME_WS_URL", ""))  # tolerate alt names
+REALTIME_URL = os.getenv("REALTIME_URL", os.getenv("REALTIME_WS_URL", "wss://api.openai.com/v1/realtime?model=gpt-4o-mini-realtime-preview-2024-12-17"))  # default like 7-backend
 REALTIME_TRANSCRIBE_MODEL = os.getenv("REALTIME_TRANSCRIBE_MODEL", "gpt-4o-mini-transcribe")
 INPUT_LANGUAGE = os.getenv("INPUT_LANGUAGE", "sv")
 OPENAI_ADD_BETA_HEADER = os.getenv("OPENAI_ADD_BETA_HEADER", "1") not in ("0", "", "false", "False")
@@ -296,3 +296,15 @@ async def safe_send_json(ws: WebSocket, payload: dict):
         await ws.send_text(json.dumps(payload, ensure_ascii=False))
     except Exception:
         pass
+
+@app.get("/config")
+async def get_config():
+    return {
+        "realtime_url": REALTIME_URL,
+        "transcribe_model": REALTIME_TRANSCRIBE_MODEL,
+        "input_language": INPUT_LANGUAGE,
+        "commit_interval_ms": COMMIT_INTERVAL_MS,
+        "cors_origins": origins,
+        "openai_beta_header": OPENAI_ADD_BETA_HEADER,
+        "ws_paths": ["/ws","/ws/transcribe","/transcribe"],
+    }
