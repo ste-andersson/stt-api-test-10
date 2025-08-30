@@ -16,6 +16,9 @@ try:
 except Exception:
     websockets = None
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # ---- Settings (match 7-backend defaults where practical) ----
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 REALTIME_URL = os.getenv("REALTIME_URL", os.getenv("REALTIME_WS_URL", "wss://api.openai.com/v1/realtime?model=gpt-4o-mini-realtime-preview-2024-12-17"))  # default like 7-backend
